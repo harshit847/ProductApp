@@ -1,0 +1,46 @@
+# Dependencies
+node_modules
+
+# Build outputs
+.next
+dist
+out
+coverage
+*.tsbuildinfo
+
+# Environment and secrets
+.env
+.env.local
+.env.*.local
+.env.production
+.env.staging
+*.env.bak
+
+# Logs
+*.log
+npm-debug.log*
+
+# Prisma local dev DB
+backend/prisma/dev.db
+backend/prisma/dev.db-journal
+
+# Chrome profiles used during verification
+chrome-profile
+chrome-verify-profile
+
+# Vercel
+.vercel
+
+# Database dumps
+*.sql
+
+# OS and editor noise
+.DS_Store
+Thumbs.db
+.vscode
+.idea
+
+# Misc
+dashboard-shot.png
+*.pem
+*.key

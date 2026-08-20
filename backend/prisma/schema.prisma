@@ -1,0 +1,111 @@
+// Prisma schema models the core CRM entities so the app stays easy to explain.
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  ADMIN
+  MANAGER
+  SALES
+}
+
+enum LeadStatus {
+  NEW
+  CONTACTED
+  QUALIFIED
+  PROPOSAL
+  WON
+  LOST
+}
+
+enum LeadPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum TaskStatus {
+  TODO
+  IN_PROGRESS
+  DONE
+}
+
+enum ActivityType {
+  LEAD_CREATED
+  LEAD_UPDATED
+  TASK_CREATED
+  TASK_DONE
+  PROFILE_UPDATED
+}
+
+model User {
+  id            String   @id @default(cuid())
+  name          String
+  email         String   @unique
+  passwordHash  String
+  role          UserRole @default(SALES)
+  avatarUrl     String?
+  department    String?
+  phone         String?
+  refreshToken  String?
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  leads         Lead[]   @relation("LeadAssignee")
+  tasks         Task[]   @relation("TaskAssignee")
+  activities    ActivityLog[]
+}
+
+model Lead {
+  id             String        @id @default(cuid())
+  name           String
+  company        String
+  email          String
+  phone          String?
+  source         String
+  status         LeadStatus    @default(NEW)
+  priority       LeadPriority  @default(MEDIUM)
+  notes          String?
+  timeline       Json?
+  address        String?
+  value          Int           @default(0)
+  ownerId        String?
+  owner          User?         @relation("LeadAssignee", fields: [ownerId], references: [id])
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  activities     ActivityLog[]
+}
+
+model Task {
+  id           String      @id @default(cuid())
+  title        String
+  description  String?
+  status       TaskStatus  @default(TODO)
+  priority     LeadPriority @default(MEDIUM)
+  dueDate      DateTime?
+  completedAt  DateTime?
+  assigneeId   String?
+  assignee     User?       @relation("TaskAssignee", fields: [assigneeId], references: [id])
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+}
+
+model ActivityLog {
+  id         String       @id @default(cuid())
+  type       ActivityType
+  message    String
+  metadata   Json?
+  userId     String?
+  user       User?        @relation(fields: [userId], references: [id])
+  leadId     String?
+  lead       Lead?        @relation(fields: [leadId], references: [id])
+  createdAt  DateTime     @default(now())
+}
