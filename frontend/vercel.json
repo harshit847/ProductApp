@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "https://productapp-n6ck.onrender.com/api/:path*"
+    }
+  ]
+}
