@@ -17,8 +17,9 @@ async function start() {
     getDashboardSummary().catch(() => undefined);
   }).catch(() => undefined);
 
-  const server = app.listen(env.port, () => {
-    console.log(`HR CRM API running on port ${env.port}`);
+  const host = "0.0.0.0";
+  const server = app.listen(env.port, host, () => {
+    console.log(`HR CRM API running on ${host}:${env.port}`);
   });
 
   const shutdown = async (signal: NodeJS.Signals) => {

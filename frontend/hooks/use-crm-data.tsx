@@ -29,6 +29,7 @@ import type { Lead, LeadStatus, DashboardSummary, Task, TaskStatus } from "@/uti
 import { resolveOwnerName } from "@/utils/types";
 import type { LeadFormValues } from "@/services/leads";
 import type { TaskFormValues } from "@/services/tasks";
+import { notify } from "@/hooks/use-notifications";
 
 const LEAD_LIMIT = 1000;
 const EMPTY_LEAD_COUNTS: Record<LeadStatus, number> = { NEW: 0, CONTACTED: 0, QUALIFIED: 0, PROPOSAL: 0, WON: 0, LOST: 0 };
@@ -253,6 +254,11 @@ export function CrmDataProvider({ children }: PropsWithChildren) {
       const created = normalizeLead({ ...result, ...values, id: result.id });
       setLeads((current) => [created, ...current]);
       setLeadsReady(true);
+      notify({
+        title: "Lead created",
+        detail: `${created.name} was added to the pipeline.`,
+        tone: "emerald"
+      });
       void refreshSummary();
       return created;
     },
@@ -305,6 +311,11 @@ export function CrmDataProvider({ children }: PropsWithChildren) {
       const created = normalizeTask({ ...result, ...values, id: result.id });
       setTasks((current) => [created, ...current]);
       setTasksReady(true);
+      notify({
+        title: "Task created",
+        detail: `${created.title} was added to the board.`,
+        tone: "cyan"
+      });
       void refreshSummary();
       return created;
     },

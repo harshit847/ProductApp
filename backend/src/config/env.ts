@@ -72,7 +72,7 @@ const rawDatabaseUrl = required("DATABASE_URL");
 
 export const env = {
   nodeEnv: process.env.NODE_ENV || "development",
-  port: Number(process.env.PORT || 4000),
+  port: Number(process.env.PORT || process.env.APP_PORT || 4000),
   clientOrigin: process.env.CLIENT_ORIGIN || "http://localhost:3000",
   clientOrigins: parseCsv(process.env.CLIENT_ORIGINS || process.env.CLIENT_ORIGIN || "http://localhost:3000"),
   databaseUrl: tuneDatabaseUrl(rawDatabaseUrl),
